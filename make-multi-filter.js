@@ -30,15 +30,3 @@ function MakeMultiFilter(originalArray) {
   return arrayFilterer;
 }
 
-// Example usage:
-const originalArray = [1, 2, 3, 4, 5];
-const filterFunction = MakeMultiFilter(originalArray);
-
-const filterCriteria = (element) => element % 2 === 0;
-const callbackFunction = function (filteredArray) {
-  console.log('Filtered Array:', filteredArray);
-  console.log('Original Array:', this); // 'this' refers to originalArray
-};
-
-filterFunction(filterCriteria, callbackFunction);
-filterFunction((element) => element > 3)(callbackFunction);
