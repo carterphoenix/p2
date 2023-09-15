@@ -1,22 +1,29 @@
 function MakeMultiFilter(originalArray) {
-  // Create a copy of the original array
+  // Check if originalArray is an array
+  if (!Array.isArray(originalArray)) {
+    throw new Error('Original array must be an array');
+  }
+
+  // Initialize currentArray to be a copy of originalArray
   let currentArray = [...originalArray];
 
   // Define the arrayFilterer function
   function arrayFilterer(filterCriteria, callback) {
-    // Check if filterCriteria is a function
-    if (typeof filterCriteria === 'function') {
-      // Apply the filterCriteria function to update currentArray
-      currentArray = currentArray.filter(filterCriteria);
+    // If filterCriteria is not a function, return currentArray
+    if (typeof filterCriteria !== 'function') {
+      return currentArray;
     }
 
-    // Check if callback is a function and call it with originalArray
+    // Filter currentArray based on filterCriteria
+    currentArray = currentArray.filter(filterCriteria);
+
+    // If callback is a function, call it with originalArray as 'this'
     if (typeof callback === 'function') {
-      callback(originalArray);
+      callback.call(originalArray, currentArray);
     }
 
-    // Return arrayFilterer function for chaining or currentArray if no filterCriteria
-    return typeof filterCriteria === 'function' ? arrayFilterer : currentArray;
+    // Return arrayFilterer to allow chaining
+    return arrayFilterer;
   }
 
   // Return the arrayFilterer function
@@ -25,20 +32,13 @@ function MakeMultiFilter(originalArray) {
 
 // Example usage:
 const originalArray = [1, 2, 3, 4, 5];
+const filterFunction = MakeMultiFilter(originalArray);
 
-const filter1 = MakeMultiFilter(originalArray);
-const filter2 = MakeMultiFilter(originalArray);
+const filterCriteria = (element) => element % 2 === 0;
+const callbackFunction = function (filteredArray) {
+  console.log('Filtered Array:', filteredArray);
+  console.log('Original Array:', this); // 'this' refers to originalArray
+};
 
-filter1(
-  (element) => element % 2 === 0,
-  (result) => {
-    console.log('Filtered Array 1:', result);
-  }
-);
-
-filter2(
-  (element) => element > 3,
-  (result) => {
-    console.log('Filtered Array 2:', result);
-  }
-);
+filterFunction(filterCriteria, callbackFunction);
+filterFunction((element) => element > 3)(callbackFunction);
