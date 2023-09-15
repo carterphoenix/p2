@@ -22,3 +22,23 @@ function MakeMultiFilter(originalArray) {
   // Return the arrayFilterer function
   return arrayFilterer;
 }
+
+// Example usage:
+const originalArray = [1, 2, 3, 4, 5];
+
+const filter1 = MakeMultiFilter(originalArray);
+const filter2 = MakeMultiFilter(originalArray);
+
+filter1(
+  (element) => element % 2 === 0,
+  (result) => {
+    console.log('Filtered Array 1:', result);
+  }
+);
+
+filter2(
+  (element) => element > 3,
+  (result) => {
+    console.log('Filtered Array 2:', result);
+  }
+);
