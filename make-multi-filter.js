@@ -1,20 +1,24 @@
 function MakeMultiFilter(originalArray) {
+  // Create a copy of the original array
   let currentArray = [...originalArray];
-  
+
+  // Define the arrayFilterer function
   function arrayFilterer(filterCriteria, callback) {
-    if (typeof filterCriteria !== 'function') {
-      return currentArray;
+    // Check if filterCriteria is a function
+    if (typeof filterCriteria === 'function') {
+      // Apply the filterCriteria function to update currentArray
+      currentArray = currentArray.filter(filterCriteria);
     }
 
-    currentArray = currentArray.filter(filterCriteria);
-
+    // Check if callback is a function and call it with originalArray
     if (typeof callback === 'function') {
-      callback(currentArray);
+      callback(originalArray);
     }
 
-    return arrayFilterer; // Return itself for chaining
+    // Return arrayFilterer function for chaining or currentArray if no filterCriteria
+    return typeof filterCriteria === 'function' ? arrayFilterer : currentArray;
   }
 
+  // Return the arrayFilterer function
   return arrayFilterer;
 }
-
